@@ -30,7 +30,8 @@ defmodule BeamlabLanguages.MixProject do
     [
       extras: [
         "LICENSE.md": [title: "License"],
-        "README.md": [title: "Overview"]
+        "README.md": [title: "Overview"],
+        "CHANGELOG.md": [title: "Changelog"]
       ],
       main: "readme",
       source_url: @source_url,
@@ -54,7 +55,7 @@ defmodule BeamlabLanguages.MixProject do
       maintainers: ["BeamLab"],
       licenses: ["MIT"],
       links: %{"GitHub" => @source_url},
-      files: ~w(lib priv/data .formatter.exs mix.exs README.md LICENSE.md)
+      files: ~w(lib priv/data .formatter.exs mix.exs README.md LICENSE.md CHANGELOG.md)
     ]
   end
 end
