@@ -1,0 +1,380 @@
+{
+  "ar": {
+    "name": "Arabic",
+    "native_name": "العربية",
+    "direction": "rtl",
+    "has_gender": true,
+    "genders": ["m", "f"]
+  },
+  "am": {
+    "name": "Amharic",
+    "native_name": "አማርኛ",
+    "direction": "ltr",
+    "has_gender": true,
+    "genders": ["m", "f"]
+  },
+  "bg": {
+    "name": "Bulgarian",
+    "native_name": "Български",
+    "direction": "ltr",
+    "has_gender": true,
+    "genders": ["m", "f", "n"]
+  },
+  "bn": {
+    "name": "Bengali",
+    "native_name": "বাংলা",
+    "direction": "ltr",
+    "has_gender": false,
+    "genders": []
+  },
+  "ca": {
+    "name": "Catalan",
+    "native_name": "Català",
+    "direction": "ltr",
+    "has_gender": true,
+    "genders": ["m", "f"]
+  },
+  "cs": {
+    "name": "Czech",
+    "native_name": "Čeština",
+    "direction": "ltr",
+    "has_gender": true,
+    "genders": ["m", "f", "n"]
+  },
+  "da": {
+    "name": "Danish",
+    "native_name": "Dansk",
+    "direction": "ltr",
+    "has_gender": true,
+    "genders": ["c", "n"]
+  },
+  "de": {
+    "name": "German",
+    "native_name": "Deutsch",
+    "direction": "ltr",
+    "has_gender": true,
+    "genders": ["m", "f", "n"]
+  },
+  "el": {
+    "name": "Greek",
+    "native_name": "Ελληνικά",
+    "direction": "ltr",
+    "has_gender": true,
+    "genders": ["m", "f", "n"]
+  },
+  "en": {
+    "name": "English",
+    "native_name": "English",
+    "direction": "ltr",
+    "has_gender": false,
+    "genders": []
+  },
+  "es": {
+    "name": "Spanish",
+    "native_name": "Español",
+    "direction": "ltr",
+    "has_gender": true,
+    "genders": ["m", "f"]
+  },
+  "et": {
+    "name": "Estonian",
+    "native_name": "Eesti",
+    "direction": "ltr",
+    "has_gender": false,
+    "genders": []
+  },
+  "fa": {
+    "name": "Persian",
+    "native_name": "فارسی",
+    "direction": "rtl",
+    "has_gender": false,
+    "genders": []
+  },
+  "fi": {
+    "name": "Finnish",
+    "native_name": "Suomi",
+    "direction": "ltr",
+    "has_gender": false,
+    "genders": []
+  },
+  "fr": {
+    "name": "French",
+    "native_name": "Français",
+    "direction": "ltr",
+    "has_gender": true,
+    "genders": ["m", "f"]
+  },
+  "gu": {
+    "name": "Gujarati",
+    "native_name": "ગુજરાતી",
+    "direction": "ltr",
+    "has_gender": true,
+    "genders": ["m", "f", "n"]
+  },
+  "ha": {
+    "name": "Hausa",
+    "native_name": "Hausa",
+    "direction": "ltr",
+    "has_gender": true,
+    "genders": ["m", "f"]
+  },
+  "he": {
+    "name": "Hebrew",
+    "native_name": "עברית",
+    "direction": "rtl",
+    "has_gender": true,
+    "genders": ["m", "f"]
+  },
+  "hi": {
+    "name": "Hindi",
+    "native_name": "हिन्दी",
+    "direction": "ltr",
+    "has_gender": true,
+    "genders": ["m", "f"]
+  },
+  "hr": {
+    "name": "Croatian",
+    "native_name": "Hrvatski",
+    "direction": "ltr",
+    "has_gender": true,
+    "genders": ["m", "f", "n"]
+  },
+  "hu": {
+    "name": "Hungarian",
+    "native_name": "Magyar",
+    "direction": "ltr",
+    "has_gender": false,
+    "genders": []
+  },
+  "hy": {
+    "name": "Armenian",
+    "native_name": "Հայերեն",
+    "direction": "ltr",
+    "has_gender": false,
+    "genders": []
+  },
+  "id": {
+    "name": "Indonesian",
+    "native_name": "Bahasa Indonesia",
+    "direction": "ltr",
+    "has_gender": false,
+    "genders": []
+  },
+  "is": {
+    "name": "Icelandic",
+    "native_name": "Íslenska",
+    "direction": "ltr",
+    "has_gender": true,
+    "genders": ["m", "f", "n"]
+  },
+  "it": {
+    "name": "Italian",
+    "native_name": "Italiano",
+    "direction": "ltr",
+    "has_gender": true,
+    "genders": ["m", "f"]
+  },
+  "ja": {
+    "name": "Japanese",
+    "native_name": "日本語",
+    "direction": "ltr",
+    "has_gender": false,
+    "genders": []
+  },
+  "ka": {
+    "name": "Georgian",
+    "native_name": "ქართული",
+    "direction": "ltr",
+    "has_gender": false,
+    "genders": []
+  },
+  "ko": {
+    "name": "Korean",
+    "native_name": "한국어",
+    "direction": "ltr",
+    "has_gender": false,
+    "genders": []
+  },
+  "mr": {
+    "name": "Marathi",
+    "native_name": "मराठी",
+    "direction": "ltr",
+    "has_gender": true,
+    "genders": ["m", "f", "n"]
+  },
+  "ms": {
+    "name": "Malay",
+    "native_name": "Bahasa Melayu",
+    "direction": "ltr",
+    "has_gender": false,
+    "genders": []
+  },
+  "my": {
+    "name": "Burmese",
+    "native_name": "မြန်မာဘာသာ",
+    "direction": "ltr",
+    "has_gender": false,
+    "genders": []
+  },
+  "nl": {
+    "name": "Dutch",
+    "native_name": "Nederlands",
+    "direction": "ltr",
+    "has_gender": true,
+    "genders": ["c", "n"]
+  },
+  "no": {
+    "name": "Norwegian",
+    "native_name": "Norsk",
+    "direction": "ltr",
+    "has_gender": true,
+    "genders": ["m", "f", "n"]
+  },
+  "pa": {
+    "name": "Punjabi",
+    "native_name": "ਪੰਜਾਬੀ",
+    "direction": "ltr",
+    "has_gender": true,
+    "genders": ["m", "f"]
+  },
+  "pl": {
+    "name": "Polish",
+    "native_name": "Polski",
+    "direction": "ltr",
+    "has_gender": true,
+    "genders": ["m", "f", "n"]
+  },
+  "pt": {
+    "name": "Portuguese",
+    "native_name": "Português",
+    "direction": "ltr",
+    "has_gender": true,
+    "genders": ["m", "f"]
+  },
+  "ro": {
+    "name": "Romanian",
+    "native_name": "Română",
+    "direction": "ltr",
+    "has_gender": true,
+    "genders": ["m", "f", "n"]
+  },
+  "ru": {
+    "name": "Russian",
+    "native_name": "Русский",
+    "direction": "ltr",
+    "has_gender": true,
+    "genders": ["m", "f", "n"]
+  },
+  "sk": {
+    "name": "Slovak",
+    "native_name": "Slovenčina",
+    "direction": "ltr",
+    "has_gender": true,
+    "genders": ["m", "f", "n"]
+  },
+  "sl": {
+    "name": "Slovenian",
+    "native_name": "Slovenščina",
+    "direction": "ltr",
+    "has_gender": true,
+    "genders": ["m", "f", "n"]
+  },
+  "sr": {
+    "name": "Serbian",
+    "native_name": "Српски",
+    "direction": "ltr",
+    "has_gender": true,
+    "genders": ["m", "f", "n"]
+  },
+  "sv": {
+    "name": "Swedish",
+    "native_name": "Svenska",
+    "direction": "ltr",
+    "has_gender": true,
+    "genders": ["c", "n"]
+  },
+  "sw": {
+    "name": "Swahili",
+    "native_name": "Kiswahili",
+    "direction": "ltr",
+    "has_gender": false,
+    "genders": []
+  },
+  "ta": {
+    "name": "Tamil",
+    "native_name": "தமிழ்",
+    "direction": "ltr",
+    "has_gender": true,
+    "genders": ["m", "f", "n"]
+  },
+  "te": {
+    "name": "Telugu",
+    "native_name": "తెలుగు",
+    "direction": "ltr",
+    "has_gender": true,
+    "genders": ["m", "f", "n"]
+  },
+  "tl": {
+    "name": "Tagalog",
+    "native_name": "Tagalog",
+    "direction": "ltr",
+    "has_gender": false,
+    "genders": []
+  },
+  "th": {
+    "name": "Thai",
+    "native_name": "ไทย",
+    "direction": "ltr",
+    "has_gender": false,
+    "genders": []
+  },
+  "tr": {
+    "name": "Turkish",
+    "native_name": "Türkçe",
+    "direction": "ltr",
+    "has_gender": false,
+    "genders": []
+  },
+  "uk": {
+    "name": "Ukrainian",
+    "native_name": "Українська",
+    "direction": "ltr",
+    "has_gender": true,
+    "genders": ["m", "f", "n"]
+  },
+  "ur": {
+    "name": "Urdu",
+    "native_name": "اردو",
+    "direction": "rtl",
+    "has_gender": true,
+    "genders": ["m", "f"]
+  },
+  "vi": {
+    "name": "Vietnamese",
+    "native_name": "Tiếng Việt",
+    "direction": "ltr",
+    "has_gender": false,
+    "genders": []
+  },
+  "yo": {
+    "name": "Yoruba",
+    "native_name": "Yorùbá",
+    "direction": "ltr",
+    "has_gender": false,
+    "genders": []
+  },
+  "zh": {
+    "name": "Chinese",
+    "native_name": "中文",
+    "direction": "ltr",
+    "has_gender": false,
+    "genders": []
+  },
+  "zu": {
+    "name": "Zulu",
+    "native_name": "isiZulu",
+    "direction": "ltr",
+    "has_gender": false,
+    "genders": []
+  }
+}
