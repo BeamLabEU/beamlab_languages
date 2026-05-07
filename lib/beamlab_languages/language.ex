@@ -9,7 +9,10 @@ defmodule BeamlabLanguages.Language do
   - `native_name` - endonym / what speakers call it themselves (e.g. `"Français"`)
   - `direction` - writing direction, `:ltr` or `:rtl`
   - `has_gender` - whether the language uses grammatical gender
-  - `genders` - list of gender codes the language uses; `[]` when `has_gender` is `false`
+  - `genders` - list of gender codes the language uses; `[]` when `has_gender` is `false`.
+    Common values are `"m"` (masculine), `"f"` (feminine), `"n"` (neuter), and **`"c"`
+    (common)** — used by Danish, Dutch, Norwegian, and Swedish, where masculine
+    and feminine have merged into a single common gender. Pattern-match all four.
 
   ## Examples
 

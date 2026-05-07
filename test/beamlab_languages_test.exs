@@ -140,6 +140,21 @@ defmodule BeamlabLanguagesTest do
       # That's get/1 / known?/1's job.
       assert BeamlabLanguages.normalize("xx") == "xx"
     end
+
+    test "maps nb / nn to no" do
+      assert BeamlabLanguages.normalize("nb") == "no"
+      assert BeamlabLanguages.normalize("nn") == "no"
+      assert BeamlabLanguages.normalize("nb-NO") == "no"
+      assert BeamlabLanguages.normalize("NN_no") == "no"
+    end
+  end
+
+  describe "Norwegian aliases" do
+    test "nb / nn resolve through the rest of the API" do
+      assert BeamlabLanguages.get("nb-NO").code == "no"
+      assert BeamlabLanguages.name("nn") == "Norwegian"
+      assert BeamlabLanguages.known?("nb")
+    end
   end
 
   describe "known?/1" do

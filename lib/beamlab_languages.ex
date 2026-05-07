@@ -12,6 +12,15 @@ defmodule BeamlabLanguages do
   All data is curated and embedded at compile time. No runtime file I/O,
   no GenServer, no ETS, no runtime dependencies.
 
+  ## Gender codes
+
+  Genders are returned as strings. Consumers commonly see `"m"` (masculine),
+  `"f"` (feminine), and `"n"` (neuter), but **also `"c"` (common)** for the
+  Continental Scandinavian and Dutch systems where masculine and feminine
+  have merged: Danish, Dutch, Norwegian Bokmål via `no`, and Swedish all
+  use `["c", "n"]`. Pattern-match on all four — a `case g do "m" -> ...;
+  "f" -> ...; "n" -> ... end` will silently miss those languages.
+
   ## Quick start
 
       iex> BeamlabLanguages.has_gender?("fr")
@@ -49,6 +58,11 @@ defmodule BeamlabLanguages do
        |> File.read!()
        |> JSON.decode!()
 
+  # Map deprecated / regional bases to the canonical entry in the data file.
+  # Real-world input from POSIX locales, glibc, and browsers emits these:
+  #   - "nb" (Bokmål) and "nn" (Nynorsk) collapse to "no" (Norwegian)
+  @aliases %{"nb" => "no", "nn" => "no"}
+
   @languages @raw
              |> Enum.map(fn {code, data} ->
                {code,
@@ -84,7 +98,7 @@ defmodule BeamlabLanguages do
       nil
 
   """
-  @spec get(String.t() | nil) :: Language.t() | nil
+  @spec get(any()) :: Language.t() | nil
   def get(code) do
     case normalize(code) do
       nil -> nil
@@ -146,7 +160,7 @@ defmodule BeamlabLanguages do
   """
   @spec has_gender?(any()) :: boolean()
   def has_gender?(code) do
-    case get_safe(code) do
+    case get(code) do
       %Language{has_gender: g} -> g
       nil -> false
     end
@@ -172,7 +186,7 @@ defmodule BeamlabLanguages do
   """
   @spec genders(any()) :: [gender()]
   def genders(code) do
-    case get_safe(code) do
+    case get(code) do
       %Language{genders: g} -> g
       nil -> []
     end
@@ -198,7 +212,7 @@ defmodule BeamlabLanguages do
   """
   @spec direction(any()) :: direction()
   def direction(code) do
-    case get_safe(code) do
+    case get(code) do
       %Language{direction: d} -> d
       nil -> :ltr
     end
@@ -221,7 +235,7 @@ defmodule BeamlabLanguages do
   """
   @spec name(any()) :: String.t() | nil
   def name(code) do
-    case get_safe(code) do
+    case get(code) do
       %Language{name: n} -> n
       nil -> nil
     end
@@ -246,7 +260,7 @@ defmodule BeamlabLanguages do
   """
   @spec native_name(any()) :: String.t() | nil
   def native_name(code) do
-    case get_safe(code) do
+    case get(code) do
       %Language{native_name: n} -> n
       nil -> nil
     end
@@ -259,6 +273,8 @@ defmodule BeamlabLanguages do
   - Accepts `_` as a separator too (`"en_US"` → `"en"`)
   - Lowercases (`"FR"` → `"fr"`)
   - Trims whitespace
+  - Maps deprecated / regional bases to their canonical entry: `"nb"`
+    (Bokmål) and `"nn"` (Nynorsk) collapse to `"no"` (Norwegian)
   - Returns `nil` if no plausible 2-letter base can be extracted
 
   This is what every other function calls internally before looking up
@@ -277,6 +293,9 @@ defmodule BeamlabLanguages do
       iex> BeamlabLanguages.normalize("zh-Hans-CN")
       "zh"
 
+      iex> BeamlabLanguages.normalize("nb-NO")
+      "no"
+
       iex> BeamlabLanguages.normalize("")
       nil
 
@@ -292,12 +311,16 @@ defmodule BeamlabLanguages do
     |> String.split(["-", "_"], parts: 2)
     |> hd()
     |> base_or_nil()
+    |> dealias()
   end
 
   def normalize(_), do: nil
 
   defp base_or_nil(<<a, b>>) when a in ?a..?z and b in ?a..?z, do: <<a, b>>
   defp base_or_nil(_), do: nil
+
+  defp dealias(nil), do: nil
+  defp dealias(base), do: Map.get(@aliases, base, base)
 
   @doc """
   Returns true iff the code maps to a known language.
@@ -317,12 +340,5 @@ defmodule BeamlabLanguages do
 
   """
   @spec known?(any()) :: boolean()
-  def known?(code), do: get_safe(code) != nil
-
-  defp get_safe(code) do
-    case normalize(code) do
-      nil -> nil
-      base -> Map.get(@languages, base)
-    end
-  end
+  def known?(code), do: get(code) != nil
 end
