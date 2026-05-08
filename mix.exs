@@ -2,7 +2,7 @@ defmodule BeamlabLanguages.MixProject do
   use Mix.Project
 
   @source_url "https://github.com/BeamLabEU/beamlab_languages"
-  @version "0.1.0"
+  @version "0.2.0"
 
   def project do
     [
@@ -50,8 +50,8 @@ defmodule BeamlabLanguages.MixProject do
     [
       description:
         "Linguistic metadata for human languages: grammatical gender, writing direction, " <>
-          "canonical and native names, and BCP 47 normalization. Curated, compile-time data " <>
-          "with zero runtime dependencies.",
+          "canonical and native names, BCP 47 normalization, and pedagogical verb " <>
+          "conjugation paradigms. Curated, compile-time data with zero runtime dependencies.",
       maintainers: ["BeamLab"],
       licenses: ["MIT"],
       links: %{"GitHub" => @source_url},

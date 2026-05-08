@@ -170,6 +170,130 @@ defmodule BeamlabLanguagesTest do
     end
   end
 
+  describe "has_verb_conjugation?/1" do
+    test "returns true for languages with a curated paradigm" do
+      assert BeamlabLanguages.has_verb_conjugation?("fr")
+    end
+
+    test "returns false for analytic / uncurated languages" do
+      refute BeamlabLanguages.has_verb_conjugation?("zh")
+      refute BeamlabLanguages.has_verb_conjugation?("en")
+      refute BeamlabLanguages.has_verb_conjugation?("ja")
+    end
+
+    test "returns false for unknown / nil / non-string" do
+      refute BeamlabLanguages.has_verb_conjugation?("xx")
+      refute BeamlabLanguages.has_verb_conjugation?(nil)
+      refute BeamlabLanguages.has_verb_conjugation?(42)
+    end
+
+    test "normalizes BCP 47 input" do
+      assert BeamlabLanguages.has_verb_conjugation?("fr-CA")
+      assert BeamlabLanguages.has_verb_conjugation?("FR")
+      assert BeamlabLanguages.has_verb_conjugation?(" fr ")
+    end
+  end
+
+  describe "verb_groups/1" do
+    test "returns the French group system" do
+      groups = BeamlabLanguages.verb_groups("fr")
+      assert length(groups) == 3
+      assert Enum.map(groups, & &1.key) == ["1", "2", "3"]
+      assert hd(groups).label_native =~ "groupe"
+      assert hd(groups).label_en =~ "group"
+    end
+
+    test "returns nil for languages without a curated paradigm" do
+      assert BeamlabLanguages.verb_groups("zh") == nil
+      assert BeamlabLanguages.verb_groups("en") == nil
+    end
+
+    test "returns nil for unknown / nil" do
+      assert BeamlabLanguages.verb_groups("xx") == nil
+      assert BeamlabLanguages.verb_groups(nil) == nil
+    end
+
+    test "normalizes BCP 47 input" do
+      assert BeamlabLanguages.verb_groups("fr-CA") == BeamlabLanguages.verb_groups("fr")
+    end
+  end
+
+  describe "persons/1" do
+    test "returns the French six-person list" do
+      persons = BeamlabLanguages.persons("fr")
+      assert length(persons) == 6
+      assert Enum.map(persons, & &1.key) == ["1sg", "2sg", "3sg", "1pl", "2pl", "3pl"]
+      assert hd(persons) == %{key: "1sg", label_native: "je", label_en: "I"}
+    end
+
+    test "every entry has both native and English labels" do
+      for p <- BeamlabLanguages.persons("fr") do
+        assert is_binary(p.label_native) and p.label_native != ""
+        assert is_binary(p.label_en) and p.label_en != ""
+      end
+    end
+
+    test "returns nil for uncurated / unknown" do
+      assert BeamlabLanguages.persons("zh") == nil
+      assert BeamlabLanguages.persons("xx") == nil
+      assert BeamlabLanguages.persons(nil) == nil
+    end
+  end
+
+  describe "conjugation_paradigm/1" do
+    test "returns the French paradigm shape" do
+      paradigm = BeamlabLanguages.conjugation_paradigm("fr")
+      assert is_map(paradigm)
+      assert is_list(paradigm.modes)
+
+      assert Enum.map(paradigm.modes, & &1.key) ==
+               ["indicatif", "subjonctif", "conditionnel", "imperatif"]
+    end
+
+    test "indicatif has 8 tenses in teaching order" do
+      [indicatif | _] = BeamlabLanguages.conjugation_paradigm("fr").modes
+      assert indicatif.label_native == "Indicatif"
+      assert indicatif.label_en == "Indicative"
+
+      assert Enum.map(indicatif.tenses, & &1.key) == [
+               "present",
+               "passe_compose",
+               "imparfait",
+               "plus_que_parfait",
+               "passe_simple",
+               "passe_anterieur",
+               "futur_simple",
+               "futur_anterieur"
+             ]
+    end
+
+    test "every mode and tense has both native and English labels" do
+      for mode <- BeamlabLanguages.conjugation_paradigm("fr").modes do
+        assert is_binary(mode.label_native) and mode.label_native != ""
+        assert is_binary(mode.label_en) and mode.label_en != ""
+
+        for tense <- mode.tenses do
+          assert is_binary(tense.key) and tense.key != ""
+          assert is_binary(tense.label_native) and tense.label_native != ""
+          assert is_binary(tense.label_en) and tense.label_en != ""
+        end
+      end
+    end
+
+    test "returns nil for uncurated / unknown" do
+      assert BeamlabLanguages.conjugation_paradigm("zh") == nil
+      assert BeamlabLanguages.conjugation_paradigm("xx") == nil
+      assert BeamlabLanguages.conjugation_paradigm(nil) == nil
+    end
+
+    test "has_verb_conjugation? agrees with conjugation_paradigm" do
+      for code <- BeamlabLanguages.list_codes() do
+        assert BeamlabLanguages.has_verb_conjugation?(code) ==
+                 (BeamlabLanguages.conjugation_paradigm(code) != nil)
+      end
+    end
+  end
+
   describe "data integrity" do
     test "every entry has every required field, well-formed" do
       for lang <- BeamlabLanguages.list() do

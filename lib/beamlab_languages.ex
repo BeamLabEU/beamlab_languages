@@ -21,6 +21,24 @@ defmodule BeamlabLanguages do
   use `["c", "n"]`. Pattern-match on all four — a `case g do "m" -> ...;
   "f" -> ...; "n" -> ... end` will silently miss those languages.
 
+  ## Verb conjugation
+
+  `has_verb_conjugation?/1`, `verb_groups/1`, `persons/1`, and
+  `conjugation_paradigm/1` expose pedagogical conjugation metadata for
+  language-learning UIs: the modes/tenses a learner is taught, the
+  group system (e.g. French -er/-ir/-re), and the pronoun list.
+
+  The contract is **"true iff we've curated a paradigm"**, not "true iff
+  the language inflects verbs". So `has_verb_conjugation?("fr")` is `true`,
+  `has_verb_conjugation?("zh")` is `false`, and `has_verb_conjugation?("en")`
+  is also `false` until an English paradigm is curated. v0.2 ships French
+  only — more languages will be added as consumers need them.
+
+  Every label entry carries both `:label_native` (the term in the target
+  language, e.g. `"Indicatif"`) and `:label_en` (the canonical English
+  rendering, e.g. `"Indicative"`). Order in every list is the **teaching
+  order** — opinionated and stable across versions.
+
   ## Quick start
 
       iex> BeamlabLanguages.has_gender?("fr")
@@ -35,6 +53,9 @@ defmodule BeamlabLanguages do
       iex> BeamlabLanguages.normalize("en-US")
       "en"
 
+      iex> BeamlabLanguages.has_verb_conjugation?("fr")
+      true
+
   Every function that takes a language code runs `normalize/1` on it
   internally — pass `"en-US"`, `"FR"`, or `" fr "` and lookups still work.
 
@@ -42,9 +63,12 @@ defmodule BeamlabLanguages do
 
   Planned for future versions and intentionally **not** in v1:
   localized language names, plural rules, articles, case marking,
-  noun classes, scripts, IPA inventory, honorific levels.
+  noun classes, scripts, IPA inventory, honorific levels. Verb
+  conjugation paradigms ship per-language as consumers need them
+  (French only as of v0.2).
   """
 
+  alias BeamlabLanguages.Conjugation
   alias BeamlabLanguages.Language
 
   @type code :: String.t()
@@ -341,4 +365,141 @@ defmodule BeamlabLanguages do
   """
   @spec known?(any()) :: boolean()
   def known?(code), do: get(code) != nil
+
+  @doc """
+  Returns true iff a verb conjugation paradigm is curated for the language.
+
+  The contract is data-driven: returns `true` exactly when
+  `conjugation_paradigm/1` would return non-`nil` for the same code.
+  English and Swedish technically inflect verbs but currently return
+  `false` — they have no curated paradigm yet.
+
+  Returns `false` for unknown / `nil` / non-string input.
+
+  ## Examples
+
+      iex> BeamlabLanguages.has_verb_conjugation?("fr")
+      true
+
+      iex> BeamlabLanguages.has_verb_conjugation?("zh")
+      false
+
+      iex> BeamlabLanguages.has_verb_conjugation?("xx")
+      false
+
+  """
+  @spec has_verb_conjugation?(any()) :: boolean()
+  def has_verb_conjugation?(code) do
+    case normalize(code) do
+      nil -> false
+      base -> Conjugation.has_paradigm?(base)
+    end
+  end
+
+  @doc """
+  Returns the pedagogical verb groups for a language, or `nil`.
+
+  Verb groups are the curriculum buckets used to teach conjugation
+  (French's -er / -ir / -re, Spanish's -ar / -er / -ir, etc.). Each
+  entry is a map with `:key`, `:label_native` (target language), and
+  `:label_en` (English).
+
+  Returns `nil` when no paradigm is curated, **and also** when the
+  language has a paradigm but no meaningful pedagogical group system.
+
+  ## Examples
+
+      iex> groups = BeamlabLanguages.verb_groups("fr")
+      iex> length(groups)
+      3
+      iex> hd(groups)
+      %{key: "1", label_native: "1er groupe (verbes en -er)", label_en: "1st group (-er verbs)"}
+
+      iex> BeamlabLanguages.verb_groups("zh")
+      nil
+
+      iex> BeamlabLanguages.verb_groups("xx")
+      nil
+
+  """
+  @spec verb_groups(any()) :: [map()] | nil
+  def verb_groups(code) do
+    case normalize(code) do
+      nil -> nil
+      base -> Conjugation.verb_groups(base)
+    end
+  end
+
+  @doc """
+  Returns the person/pronoun list for a language's conjugation, or `nil`.
+
+  Each entry is a map with `:key` (a stable identifier like `"1sg"` or
+  `"3pl"`), `:label_native` (the pronoun in the target language), and
+  `:label_en` (the English gloss, useful for learner UIs).
+
+  The set of person keys may vary by language — a future Slovenian entry
+  would add a dual, Arabic would split 2nd person by gender, etc. Don't
+  assume a fixed six-person shape.
+
+  Returns `nil` for languages without a curated paradigm.
+
+  ## Examples
+
+      iex> persons = BeamlabLanguages.persons("fr")
+      iex> length(persons)
+      6
+      iex> hd(persons)
+      %{key: "1sg", label_native: "je", label_en: "I"}
+
+      iex> BeamlabLanguages.persons("zh")
+      nil
+
+  """
+  @spec persons(any()) :: [map()] | nil
+  def persons(code) do
+    case normalize(code) do
+      nil -> nil
+      base -> Conjugation.persons(base)
+    end
+  end
+
+  @doc """
+  Returns the conjugation paradigm — modes and their tenses — or `nil`.
+
+  Shape: `%{modes: [%{key, label_native, label_en, tenses: [%{key,
+  label_native, label_en}, ...]}, ...]}`. Order of modes and tenses is
+  the **teaching order** — opinionated and stable across versions.
+
+  Persons live separately under `persons/1`, not inside the paradigm,
+  so the same paradigm can be paired with the language's pronoun list
+  in the consumer UI.
+
+  Returns `nil` for languages without a curated paradigm.
+
+  ## Examples
+
+      iex> paradigm = BeamlabLanguages.conjugation_paradigm("fr")
+      iex> length(paradigm.modes)
+      4
+      iex> [first | _] = paradigm.modes
+      iex> first.key
+      "indicatif"
+      iex> first.label_native
+      "Indicatif"
+      iex> first.label_en
+      "Indicative"
+      iex> length(first.tenses)
+      8
+
+      iex> BeamlabLanguages.conjugation_paradigm("zh")
+      nil
+
+  """
+  @spec conjugation_paradigm(any()) :: map() | nil
+  def conjugation_paradigm(code) do
+    case normalize(code) do
+      nil -> nil
+      base -> Conjugation.paradigm(base)
+    end
+  end
 end

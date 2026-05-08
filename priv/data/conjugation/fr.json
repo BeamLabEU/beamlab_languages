@@ -1,0 +1,63 @@
+{
+  "verb_groups": [
+    {"key": "1", "label_native": "1er groupe (verbes en -er)", "label_en": "1st group (-er verbs)"},
+    {"key": "2", "label_native": "2e groupe (verbes en -ir)", "label_en": "2nd group (-ir verbs)"},
+    {"key": "3", "label_native": "3e groupe (irréguliers)", "label_en": "3rd group (irregular)"}
+  ],
+  "persons": [
+    {"key": "1sg", "label_native": "je", "label_en": "I"},
+    {"key": "2sg", "label_native": "tu", "label_en": "you (familiar)"},
+    {"key": "3sg", "label_native": "il/elle/on", "label_en": "he/she/one"},
+    {"key": "1pl", "label_native": "nous", "label_en": "we"},
+    {"key": "2pl", "label_native": "vous", "label_en": "you (formal/plural)"},
+    {"key": "3pl", "label_native": "ils/elles", "label_en": "they (m/f)"}
+  ],
+  "paradigm": {
+    "modes": [
+      {
+        "key": "indicatif",
+        "label_native": "Indicatif",
+        "label_en": "Indicative",
+        "tenses": [
+          {"key": "present",          "label_native": "Présent",          "label_en": "Present"},
+          {"key": "passe_compose",    "label_native": "Passé composé",    "label_en": "Compound past"},
+          {"key": "imparfait",        "label_native": "Imparfait",        "label_en": "Imperfect"},
+          {"key": "plus_que_parfait", "label_native": "Plus-que-parfait", "label_en": "Pluperfect"},
+          {"key": "passe_simple",     "label_native": "Passé simple",     "label_en": "Simple past"},
+          {"key": "passe_anterieur",  "label_native": "Passé antérieur",  "label_en": "Past anterior"},
+          {"key": "futur_simple",     "label_native": "Futur simple",     "label_en": "Simple future"},
+          {"key": "futur_anterieur",  "label_native": "Futur antérieur",  "label_en": "Future anterior"}
+        ]
+      },
+      {
+        "key": "subjonctif",
+        "label_native": "Subjonctif",
+        "label_en": "Subjunctive",
+        "tenses": [
+          {"key": "present",          "label_native": "Présent",          "label_en": "Present"},
+          {"key": "passe",            "label_native": "Passé",            "label_en": "Past"},
+          {"key": "imparfait",        "label_native": "Imparfait",        "label_en": "Imperfect"},
+          {"key": "plus_que_parfait", "label_native": "Plus-que-parfait", "label_en": "Pluperfect"}
+        ]
+      },
+      {
+        "key": "conditionnel",
+        "label_native": "Conditionnel",
+        "label_en": "Conditional",
+        "tenses": [
+          {"key": "present", "label_native": "Présent", "label_en": "Present"},
+          {"key": "passe",   "label_native": "Passé",   "label_en": "Past"}
+        ]
+      },
+      {
+        "key": "imperatif",
+        "label_native": "Impératif",
+        "label_en": "Imperative",
+        "tenses": [
+          {"key": "present", "label_native": "Présent", "label_en": "Present"},
+          {"key": "passe",   "label_native": "Passé",   "label_en": "Past"}
+        ]
+      }
+    ]
+  }
+}
