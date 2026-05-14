@@ -59,6 +59,13 @@ defmodule BeamlabLanguages do
   Every function that takes a language code runs `normalize/1` on it
   internally — pass `"en-US"`, `"FR"`, or `" fr "` and lookups still work.
 
+  ## Proficiency levels
+
+  `level_systems/0`, `levels/1`, `level_system_label/1`, and
+  `level_info/2` expose curated proficiency level systems (CEFR,
+  JLPT, HSK) for language-learning UIs. Order is pedagogical
+  (A1→C2, N5→N1, HSK1→HSK6), not alphabetical.
+
   ## Roadmap
 
   Planned for future versions and intentionally **not** in v1:
@@ -70,6 +77,7 @@ defmodule BeamlabLanguages do
 
   alias BeamlabLanguages.Conjugation
   alias BeamlabLanguages.Language
+  alias BeamlabLanguages.Levels
 
   @type code :: String.t()
   @type gender :: String.t()
@@ -502,4 +510,79 @@ defmodule BeamlabLanguages do
       base -> Conjugation.paradigm(base)
     end
   end
+
+  @doc """
+  Lists every known proficiency level system key, sorted.
+
+  ## Examples
+
+      iex> "cefr" in BeamlabLanguages.level_systems()
+      true
+
+      iex> BeamlabLanguages.level_systems() == Enum.sort(BeamlabLanguages.level_systems())
+      true
+
+  """
+  @spec level_systems() :: [String.t()]
+  def level_systems, do: Levels.systems()
+
+  @doc """
+  Lists the levels for a proficiency system, in pedagogical order.
+
+  Returns `[]` for unknown systems.
+
+  ## Examples
+
+      iex> BeamlabLanguages.levels("cefr")
+      ["A1", "A2", "B1", "B2", "C1", "C2"]
+
+      iex> BeamlabLanguages.levels("jlpt")
+      ["N5", "N4", "N3", "N2", "N1"]
+
+      iex> BeamlabLanguages.levels("unknown")
+      []
+
+  """
+  @spec levels(String.t()) :: [String.t()]
+  def levels(system), do: Levels.level_keys(system)
+
+  @doc """
+  Returns the human-readable label for a proficiency system.
+
+  Returns `nil` for unknown systems.
+
+  ## Examples
+
+      iex> BeamlabLanguages.level_system_label("cefr")
+      "CEFR"
+
+      iex> BeamlabLanguages.level_system_label("hsk")
+      "HSK"
+
+      iex> BeamlabLanguages.level_system_label("unknown")
+      nil
+
+  """
+  @spec level_system_label(String.t()) :: String.t() | nil
+  def level_system_label(system), do: Levels.label(system)
+
+  @doc """
+  Returns metadata for a single level within a system.
+
+  Returns `nil` for unknown systems or unknown levels.
+
+  ## Examples
+
+      iex> BeamlabLanguages.level_info("cefr", "A1")
+      %{key: "A1", label: "A1", description: "Beginner"}
+
+      iex> BeamlabLanguages.level_info("cefr", "Z9")
+      nil
+
+      iex> BeamlabLanguages.level_info("unknown", "A1")
+      nil
+
+  """
+  @spec level_info(String.t(), String.t()) :: map() | nil
+  def level_info(system, level_key), do: Levels.level_info(system, level_key)
 end

@@ -2,7 +2,7 @@ defmodule BeamlabLanguages.MixProject do
   use Mix.Project
 
   @source_url "https://github.com/BeamLabEU/beamlab_languages"
-  @version "0.2.0"
+  @version "0.3.0"
 
   def project do
     [
@@ -22,7 +22,9 @@ defmodule BeamlabLanguages.MixProject do
 
   defp deps do
     [
-      {:ex_doc, "~> 0.39", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.39", only: :dev, runtime: false},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false}
     ]
   end
 
@@ -42,7 +44,7 @@ defmodule BeamlabLanguages.MixProject do
 
   defp aliases do
     [
-      precommit: ["compile", "format", "test"]
+      precommit: ["compile", "format", "credo", "dialyzer", "test"]
     ]
   end
 

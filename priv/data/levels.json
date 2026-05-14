@@ -1,0 +1,34 @@
+{
+  "cefr": {
+    "label": "CEFR",
+    "levels": [
+      {"key": "A1", "label": "A1", "description": "Beginner"},
+      {"key": "A2", "label": "A2", "description": "Elementary"},
+      {"key": "B1", "label": "B1", "description": "Intermediate"},
+      {"key": "B2", "label": "B2", "description": "Upper Intermediate"},
+      {"key": "C1", "label": "C1", "description": "Advanced"},
+      {"key": "C2", "label": "C2", "description": "Proficiency"}
+    ]
+  },
+  "jlpt": {
+    "label": "JLPT",
+    "levels": [
+      {"key": "N5", "label": "N5", "description": "Beginner"},
+      {"key": "N4", "label": "N4", "description": "Elementary"},
+      {"key": "N3", "label": "N3", "description": "Intermediate"},
+      {"key": "N2", "label": "N2", "description": "Upper Intermediate"},
+      {"key": "N1", "label": "N1", "description": "Advanced"}
+    ]
+  },
+  "hsk": {
+    "label": "HSK",
+    "levels": [
+      {"key": "HSK1", "label": "HSK 1", "description": "Beginner"},
+      {"key": "HSK2", "label": "HSK 2", "description": "Elementary"},
+      {"key": "HSK3", "label": "HSK 3", "description": "Intermediate"},
+      {"key": "HSK4", "label": "HSK 4", "description": "Upper Intermediate"},
+      {"key": "HSK5", "label": "HSK 5", "description": "Advanced"},
+      {"key": "HSK6", "label": "HSK 6", "description": "Proficiency"}
+    ]
+  }
+}

@@ -315,4 +315,70 @@ defmodule BeamlabLanguagesTest do
       assert length(codes) == length(Enum.uniq(codes))
     end
   end
+
+  describe "level_systems/0" do
+    test "returns sorted list of known systems" do
+      assert BeamlabLanguages.level_systems() == ["cefr", "hsk", "jlpt"]
+    end
+  end
+
+  describe "levels/1" do
+    test "returns CEFR levels in pedagogical order" do
+      assert BeamlabLanguages.levels("cefr") == ["A1", "A2", "B1", "B2", "C1", "C2"]
+    end
+
+    test "returns JLPT levels in pedagogical order" do
+      assert BeamlabLanguages.levels("jlpt") == ["N5", "N4", "N3", "N2", "N1"]
+    end
+
+    test "returns HSK levels in pedagogical order" do
+      assert BeamlabLanguages.levels("hsk") == ["HSK1", "HSK2", "HSK3", "HSK4", "HSK5", "HSK6"]
+    end
+
+    test "returns [] for unknown system" do
+      assert BeamlabLanguages.levels("unknown") == []
+    end
+  end
+
+  describe "level_system_label/1" do
+    test "returns labels for known systems" do
+      assert BeamlabLanguages.level_system_label("cefr") == "CEFR"
+      assert BeamlabLanguages.level_system_label("jlpt") == "JLPT"
+      assert BeamlabLanguages.level_system_label("hsk") == "HSK"
+    end
+
+    test "returns nil for unknown system" do
+      assert BeamlabLanguages.level_system_label("unknown") == nil
+    end
+  end
+
+  describe "level_info/2" do
+    test "returns metadata for known system and level" do
+      assert BeamlabLanguages.level_info("cefr", "A1") == %{
+               key: "A1",
+               label: "A1",
+               description: "Beginner"
+             }
+
+      assert BeamlabLanguages.level_info("jlpt", "N1") == %{
+               key: "N1",
+               label: "N1",
+               description: "Advanced"
+             }
+
+      assert BeamlabLanguages.level_info("hsk", "HSK3") == %{
+               key: "HSK3",
+               label: "HSK 3",
+               description: "Intermediate"
+             }
+    end
+
+    test "returns nil for unknown system" do
+      assert BeamlabLanguages.level_info("unknown", "A1") == nil
+    end
+
+    test "returns nil for unknown level" do
+      assert BeamlabLanguages.level_info("cefr", "Z9") == nil
+    end
+  end
 end

@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+## [0.3.0] - 2026-05-15
+
+### Added
+
+- **Proficiency level systems** — `BeamlabLanguages.level_systems/0`, `levels/1`, `level_system_label/1`, and `level_info/2` expose curated CEFR, JLPT, and HSK data. Levels are returned in pedagogical order (A1→C2, N5→N1, HSK1→HSK6). Data lives in `priv/data/levels.json` and is embedded at compile time with zero runtime dependencies.
+- **Development tooling** — Added `credo` and `dialyxir` as dev dependencies. The `precommit` alias now runs `compile`, `format`, `credo`, `dialyzer`, and `test`.
+
 ## [0.2.0] - 2026-05-08
 
 ### Added
@@ -46,4 +55,6 @@ Initial release.
 - **54 curated languages** in `priv/data/languages.json`, covering the top-spoken languages plus all CEFR / JLPT / HSK targets.
 - **Compile-time data loading** — no runtime file I/O, no GenServer, no ETS, zero runtime dependencies.
 
+[0.3.0]: https://github.com/BeamLabEU/beamlab_languages/releases/tag/v0.3.0
+[0.2.0]: https://github.com/BeamLabEU/beamlab_languages/releases/tag/v0.2.0
 [0.1.0]: https://github.com/BeamLabEU/beamlab_languages/releases/tag/v0.1.0
