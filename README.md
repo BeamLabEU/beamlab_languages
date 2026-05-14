@@ -1,6 +1,6 @@
 # BEAM Lab Languages
 
-Linguistic metadata for human languages: grammatical gender, writing direction, canonical and native names, and BCP 47 normalization. Curated, compile-time data with zero runtime dependencies.
+Linguistic metadata for human languages: grammatical gender, writing direction, canonical and native names, BCP 47 normalization, and proficiency level systems (CEFR, JLPT, HSK). Curated, compile-time data with zero runtime dependencies.
 
 Sibling library to [`beamlab_countries`](https://hex.pm/packages/beamlab_countries) — `beamlab_countries` knows where languages are spoken, `beamlab_languages` knows what they are like.
 
@@ -10,13 +10,14 @@ Sibling library to [`beamlab_countries`](https://hex.pm/packages/beamlab_countri
 - "Is Arabic written right-to-left?"
 - "What's the canonical English name of `fr`? The endonym?"
 - "Does the user's locale string `en-US` collapse to a base I can use as a key?"
+- "What CEFR levels exist, in teaching order?" "What about JLPT or HSK?"
 
 ## Installation
 
 ```elixir
 defp deps do
   [
-    {:beamlab_languages, "~> 0.1"}
+    {:beamlab_languages, "~> 0.3"}
   ]
 end
 ```
@@ -53,6 +54,12 @@ BeamlabLanguages.get("fr")
 #   has_gender: true,
 #   genders: ["m", "f"]
 # }
+
+BeamlabLanguages.levels("cefr")
+# ["A1", "A2", "B1", "B2", "C1", "C2"]
+
+BeamlabLanguages.level_info("cefr", "A1")
+# %{key: "A1", label: "A1", description: "Beginner"}
 ```
 
 Every function that takes a language code runs `normalize/1` internally, so `"en-US"`, `"FR"`, and `" fr "` all work. Predicates (`has_gender?/1`, `known?/1`) return `false` for `nil` or unknown input rather than raising — handy in form-validation paths.
@@ -63,7 +70,14 @@ Full API docs at [HexDocs](https://hexdocs.pm/beamlab_languages).
 
 ## Coverage
 
-v1 covers 50+ languages: the top-spoken languages worldwide plus all CEFR / JLPT / HSK targets. The data lives in `priv/data/languages.json` — open a PR to add more or correct an entry.
+v1 covers 50+ languages: the top-spoken languages worldwide plus all CEFR / JLPT / HSK targets.
+
+Data files:
+- `priv/data/languages.json` — core language metadata
+- `priv/data/levels.json` — proficiency level systems
+- `priv/data/conjugation/*.json` — verb conjugation paradigms
+
+Open a PR to add more or correct an entry.
 
 ## Roadmap (planned, not in v1)
 
@@ -88,7 +102,7 @@ These are intentionally deferred so v1 ships small. The v1 API is shaped to leav
 
 1. Fork it
 2. Create a feature branch (`git checkout -b my-new-feature`)
-3. Edit `priv/data/languages.json` and/or code
+3. Edit `priv/data/languages.json`, `priv/data/levels.json`, and/or code
 4. `mix test` and `mix format`
 5. Open a PR
 
