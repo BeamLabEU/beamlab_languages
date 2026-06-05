@@ -23,9 +23,10 @@ defmodule BeamlabLanguages do
 
   ## Verb conjugation
 
-  `has_verb_conjugation?/1`, `verb_groups/1`, `persons/1`, and
-  `conjugation_paradigm/1` expose pedagogical conjugation metadata for
-  language-learning UIs: the modes/tenses a learner is taught, the
+  `has_verb_conjugation?/1`, `verb_groups/1`, `persons/1`,
+  `conjugation_paradigm/1`, and `tense_level/3` expose pedagogical
+  conjugation metadata for language-learning UIs: the modes/tenses a
+  learner is taught, the proficiency level each tense is taught at, the
   group system (e.g. French -er/-ir/-re), and the pronoun list.
 
   The contract is **"true iff we've curated a paradigm"**, not "true iff
@@ -36,8 +37,10 @@ defmodule BeamlabLanguages do
 
   Every label entry carries both `:label_native` (the term in the target
   language, e.g. `"Indicatif"`) and `:label_en` (the canonical English
-  rendering, e.g. `"Indicative"`). Order in every list is the **teaching
-  order** — opinionated and stable across versions.
+  rendering, e.g. `"Indicative"`). Tenses additionally carry a `:level`
+  (CEFR / JLPT / HSK key) marking where they sit in the curriculum. Order
+  in every list is the **teaching order** — opinionated and stable across
+  versions.
 
   ## Quick start
 
@@ -475,8 +478,16 @@ defmodule BeamlabLanguages do
   Returns the conjugation paradigm — modes and their tenses — or `nil`.
 
   Shape: `%{modes: [%{key, label_native, label_en, tenses: [%{key,
-  label_native, label_en}, ...]}, ...]}`. Order of modes and tenses is
-  the **teaching order** — opinionated and stable across versions.
+  label_native, label_en, level}, ...]}, ...]}`. Order of modes and
+  tenses is the **teaching order** — opinionated and stable across
+  versions.
+
+  Each tense carries a `:level` — the proficiency level (a CEFR key like
+  `"B1"` for European languages, or the relevant JLPT / HSK key for
+  zh / ja) at which the tense/mood is typically taught. It's a property
+  of the tense in the language's curriculum, independent of any specific
+  verb. `nil` when the level is genuinely unknown; every French tense has
+  a value. Use `tense_level/3` to read one without walking the tree.
 
   Persons live separately under `persons/1`, not inside the paradigm,
   so the same paradigm can be paired with the language's pronoun list
@@ -498,6 +509,8 @@ defmodule BeamlabLanguages do
       "Indicative"
       iex> length(first.tenses)
       8
+      iex> hd(first.tenses)
+      %{key: "present", label_native: "Présent", label_en: "Present", level: "A1"}
 
       iex> BeamlabLanguages.conjugation_paradigm("zh")
       nil
@@ -508,6 +521,39 @@ defmodule BeamlabLanguages do
     case normalize(code) do
       nil -> nil
       base -> Conjugation.paradigm(base)
+    end
+  end
+
+  @doc """
+  Returns the proficiency level for a single tense, or `nil`.
+
+  Convenience reader over `conjugation_paradigm/1` so consumers don't have
+  to walk the modes/tenses tree. The level is a CEFR key (`"A1"`…`"C2"`)
+  for European languages, or the relevant JLPT / HSK key for zh / ja.
+
+  Returns `nil` for unknown / `nil` codes, unknown mode or tense keys, and
+  for tenses whose level is genuinely unknown.
+
+  ## Examples
+
+      iex> BeamlabLanguages.tense_level("fr", "subjonctif", "present")
+      "B1"
+
+      iex> BeamlabLanguages.tense_level("fr", "indicatif", "present")
+      "A1"
+
+      iex> BeamlabLanguages.tense_level("fr", "indicatif", "nonexistent")
+      nil
+
+      iex> BeamlabLanguages.tense_level("zh", "indicatif", "present")
+      nil
+
+  """
+  @spec tense_level(any(), String.t(), String.t()) :: String.t() | nil
+  def tense_level(code, mode_key, tense_key) do
+    case normalize(code) do
+      nil -> nil
+      base -> Conjugation.tense_level(base, mode_key, tense_key)
     end
   end
 

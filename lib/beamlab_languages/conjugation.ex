@@ -30,6 +30,12 @@ defmodule BeamlabLanguages.Conjugation do
     %{key: k, label_native: ln, label_en: le}
   end
 
+  # Tenses carry an extra `:level` (CEFR / JLPT / HSK key) describing where the
+  # tense sits in a curriculum. Absent in the JSON ⇒ `nil` (level unknown).
+  to_tense = fn %{"key" => k, "label_native" => ln, "label_en" => le} = tense ->
+    %{key: k, label_native: ln, label_en: le, level: Map.get(tense, "level")}
+  end
+
   to_mode = fn %{
                  "key" => k,
                  "label_native" => ln,
@@ -40,7 +46,7 @@ defmodule BeamlabLanguages.Conjugation do
       key: k,
       label_native: ln,
       label_en: le,
-      tenses: Enum.map(tenses, to_label_item)
+      tenses: Enum.map(tenses, to_tense)
     }
   end
 
@@ -92,6 +98,17 @@ defmodule BeamlabLanguages.Conjugation do
     case Map.get(@data, code) do
       nil -> nil
       data -> data.paradigm
+    end
+  end
+
+  @spec tense_level(String.t(), String.t(), String.t()) :: String.t() | nil
+  def tense_level(code, mode_key, tense_key) do
+    with %{paradigm: %{modes: modes}} <- Map.get(@data, code),
+         %{tenses: tenses} <- Enum.find(modes, &(&1.key == mode_key)),
+         %{level: level} <- Enum.find(tenses, &(&1.key == tense_key)) do
+      level
+    else
+      _ -> nil
     end
   end
 end

@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-06-05
+
+### Added
+
+- **CEFR level on conjugation tenses** — every tense in `conjugation_paradigm/1` now carries a `:level` key (the CEFR / JLPT / HSK key at which the tense/mood is typically taught). It's a property of the tense in the language's curriculum, independent of any specific verb. All 16 French tenses are levelled A1→C2. Purely additive: existing keys are unchanged.
+- **`tense_level/3`** — convenience reader that returns the level for a single `(code, mode, tense)` without walking the paradigm tree. Returns `nil` for unknown codes / modes / tenses and for tenses whose level is unknown.
+
 ## [0.3.0] - 2026-05-15
 
 ### Added
@@ -55,6 +62,7 @@ Initial release.
 - **54 curated languages** in `priv/data/languages.json`, covering the top-spoken languages plus all CEFR / JLPT / HSK targets.
 - **Compile-time data loading** — no runtime file I/O, no GenServer, no ETS, zero runtime dependencies.
 
+[0.4.0]: https://github.com/BeamLabEU/beamlab_languages/releases/tag/v0.4.0
 [0.3.0]: https://github.com/BeamLabEU/beamlab_languages/releases/tag/v0.3.0
 [0.2.0]: https://github.com/BeamLabEU/beamlab_languages/releases/tag/v0.2.0
 [0.1.0]: https://github.com/BeamLabEU/beamlab_languages/releases/tag/v0.1.0

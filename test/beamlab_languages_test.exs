@@ -280,6 +280,16 @@ defmodule BeamlabLanguagesTest do
       end
     end
 
+    test "every French tense has a CEFR level" do
+      cefr = BeamlabLanguages.levels("cefr")
+
+      for mode <- BeamlabLanguages.conjugation_paradigm("fr").modes,
+          tense <- mode.tenses do
+        assert tense.level in cefr,
+               "#{mode.key}/#{tense.key} has bad level: #{inspect(tense.level)}"
+      end
+    end
+
     test "returns nil for uncurated / unknown" do
       assert BeamlabLanguages.conjugation_paradigm("zh") == nil
       assert BeamlabLanguages.conjugation_paradigm("xx") == nil
@@ -291,6 +301,33 @@ defmodule BeamlabLanguagesTest do
         assert BeamlabLanguages.has_verb_conjugation?(code) ==
                  (BeamlabLanguages.conjugation_paradigm(code) != nil)
       end
+    end
+  end
+
+  describe "tense_level/3" do
+    test "returns the CEFR level for a known tense" do
+      assert BeamlabLanguages.tense_level("fr", "indicatif", "present") == "A1"
+      assert BeamlabLanguages.tense_level("fr", "subjonctif", "present") == "B1"
+      assert BeamlabLanguages.tense_level("fr", "subjonctif", "imparfait") == "C2"
+    end
+
+    test "normalizes the code" do
+      assert BeamlabLanguages.tense_level("fr-FR", "indicatif", "present") == "A1"
+    end
+
+    test "agrees with the paradigm tree" do
+      for mode <- BeamlabLanguages.conjugation_paradigm("fr").modes,
+          tense <- mode.tenses do
+        assert BeamlabLanguages.tense_level("fr", mode.key, tense.key) == tense.level
+      end
+    end
+
+    test "returns nil for unknown mode, tense, or language" do
+      assert BeamlabLanguages.tense_level("fr", "indicatif", "nonexistent") == nil
+      assert BeamlabLanguages.tense_level("fr", "nonexistent", "present") == nil
+      assert BeamlabLanguages.tense_level("zh", "indicatif", "present") == nil
+      assert BeamlabLanguages.tense_level("xx", "indicatif", "present") == nil
+      assert BeamlabLanguages.tense_level(nil, "indicatif", "present") == nil
     end
   end
 

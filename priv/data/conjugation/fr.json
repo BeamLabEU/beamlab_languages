@@ -19,14 +19,14 @@
         "label_native": "Indicatif",
         "label_en": "Indicative",
         "tenses": [
-          {"key": "present",          "label_native": "Présent",          "label_en": "Present"},
-          {"key": "passe_compose",    "label_native": "Passé composé",    "label_en": "Compound past"},
-          {"key": "imparfait",        "label_native": "Imparfait",        "label_en": "Imperfect"},
-          {"key": "plus_que_parfait", "label_native": "Plus-que-parfait", "label_en": "Pluperfect"},
-          {"key": "passe_simple",     "label_native": "Passé simple",     "label_en": "Simple past"},
-          {"key": "passe_anterieur",  "label_native": "Passé antérieur",  "label_en": "Past anterior"},
-          {"key": "futur_simple",     "label_native": "Futur simple",     "label_en": "Simple future"},
-          {"key": "futur_anterieur",  "label_native": "Futur antérieur",  "label_en": "Future anterior"}
+          {"key": "present",          "label_native": "Présent",          "label_en": "Present",        "level": "A1"},
+          {"key": "passe_compose",    "label_native": "Passé composé",    "label_en": "Compound past",  "level": "A2"},
+          {"key": "imparfait",        "label_native": "Imparfait",        "label_en": "Imperfect",      "level": "A2"},
+          {"key": "plus_que_parfait", "label_native": "Plus-que-parfait", "label_en": "Pluperfect",     "level": "B1"},
+          {"key": "passe_simple",     "label_native": "Passé simple",     "label_en": "Simple past",    "level": "C1"},
+          {"key": "passe_anterieur",  "label_native": "Passé antérieur",  "label_en": "Past anterior",  "level": "C1"},
+          {"key": "futur_simple",     "label_native": "Futur simple",     "label_en": "Simple future",  "level": "A2"},
+          {"key": "futur_anterieur",  "label_native": "Futur antérieur",  "label_en": "Future anterior","level": "B2"}
         ]
       },
       {
@@ -34,10 +34,10 @@
         "label_native": "Subjonctif",
         "label_en": "Subjunctive",
         "tenses": [
-          {"key": "present",          "label_native": "Présent",          "label_en": "Present"},
-          {"key": "passe",            "label_native": "Passé",            "label_en": "Past"},
-          {"key": "imparfait",        "label_native": "Imparfait",        "label_en": "Imperfect"},
-          {"key": "plus_que_parfait", "label_native": "Plus-que-parfait", "label_en": "Pluperfect"}
+          {"key": "present",          "label_native": "Présent",          "label_en": "Present",    "level": "B1"},
+          {"key": "passe",            "label_native": "Passé",            "label_en": "Past",       "level": "B2"},
+          {"key": "imparfait",        "label_native": "Imparfait",        "label_en": "Imperfect",  "level": "C2"},
+          {"key": "plus_que_parfait", "label_native": "Plus-que-parfait", "label_en": "Pluperfect", "level": "C2"}
         ]
       },
       {
@@ -45,8 +45,8 @@
         "label_native": "Conditionnel",
         "label_en": "Conditional",
         "tenses": [
-          {"key": "present", "label_native": "Présent", "label_en": "Present"},
-          {"key": "passe",   "label_native": "Passé",   "label_en": "Past"}
+          {"key": "present", "label_native": "Présent", "label_en": "Present", "level": "A2"},
+          {"key": "passe",   "label_native": "Passé",   "label_en": "Past",    "level": "B2"}
         ]
       },
       {
@@ -54,8 +54,8 @@
         "label_native": "Impératif",
         "label_en": "Imperative",
         "tenses": [
-          {"key": "present", "label_native": "Présent", "label_en": "Present"},
-          {"key": "passe",   "label_native": "Passé",   "label_en": "Past"}
+          {"key": "present", "label_native": "Présent", "label_en": "Present", "level": "A1"},
+          {"key": "passe",   "label_native": "Passé",   "label_en": "Past",    "level": "C1"}
         ]
       }
     ]
