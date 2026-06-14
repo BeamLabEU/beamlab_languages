@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-06-14
+
+### Added
+
+- **Italian verb conjugation paradigm** — `priv/data/conjugation/it.json` adds a full Italian paradigm, so `has_verb_conjugation?("it")` is now `true` and `conjugation_paradigm("it")` returns the four modes (indicativo, congiuntivo, condizionale, imperativo) with CEFR-levelled tenses. Person slots reuse the shared `1sg/2sg/3sg/1pl/2pl/3pl` keys (io/tu/lui-lei/noi/voi/loro labels); `indicativo/presente` and `imperativo/presente` are levelled `A1`. Data-only change; no API additions.
+
 ## [0.5.0] - 2026-06-06
 
 ### Added
@@ -69,6 +75,8 @@ Initial release.
 - **54 curated languages** in `priv/data/languages.json`, covering the top-spoken languages plus all CEFR / JLPT / HSK targets.
 - **Compile-time data loading** — no runtime file I/O, no GenServer, no ETS, zero runtime dependencies.
 
+[0.6.0]: https://github.com/BeamLabEU/beamlab_languages/releases/tag/v0.6.0
+[0.5.0]: https://github.com/BeamLabEU/beamlab_languages/releases/tag/v0.5.0
 [0.4.0]: https://github.com/BeamLabEU/beamlab_languages/releases/tag/v0.4.0
 [0.3.0]: https://github.com/BeamLabEU/beamlab_languages/releases/tag/v0.3.0
 [0.2.0]: https://github.com/BeamLabEU/beamlab_languages/releases/tag/v0.2.0

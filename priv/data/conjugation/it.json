@@ -1,0 +1,62 @@
+{
+  "verb_groups": [
+    {"key": "1", "label_native": "1ª coniugazione (verbi in -are)", "label_en": "1st conjugation (-are verbs)"},
+    {"key": "2", "label_native": "2ª coniugazione (verbi in -ere)", "label_en": "2nd conjugation (-ere verbs)"},
+    {"key": "3", "label_native": "3ª coniugazione (verbi in -ire)", "label_en": "3rd conjugation (-ire verbs)"}
+  ],
+  "persons": [
+    {"key": "1sg", "label_native": "io", "label_en": "I"},
+    {"key": "2sg", "label_native": "tu", "label_en": "you (familiar)"},
+    {"key": "3sg", "label_native": "lui/lei", "label_en": "he/she"},
+    {"key": "1pl", "label_native": "noi", "label_en": "we"},
+    {"key": "2pl", "label_native": "voi", "label_en": "you (plural)"},
+    {"key": "3pl", "label_native": "loro", "label_en": "they"}
+  ],
+  "paradigm": {
+    "modes": [
+      {
+        "key": "indicativo",
+        "label_native": "Indicativo",
+        "label_en": "Indicative",
+        "tenses": [
+          {"key": "presente",            "label_native": "Presente",            "label_en": "Present",          "level": "A1"},
+          {"key": "passato_prossimo",    "label_native": "Passato prossimo",    "label_en": "Present perfect",  "level": "A2"},
+          {"key": "imperfetto",          "label_native": "Imperfetto",          "label_en": "Imperfect",        "level": "A2"},
+          {"key": "futuro_semplice",     "label_native": "Futuro semplice",     "label_en": "Simple future",    "level": "A2"},
+          {"key": "trapassato_prossimo", "label_native": "Trapassato prossimo", "label_en": "Pluperfect",       "level": "B1"},
+          {"key": "futuro_anteriore",    "label_native": "Futuro anteriore",    "label_en": "Future perfect",   "level": "B1"},
+          {"key": "passato_remoto",      "label_native": "Passato remoto",      "label_en": "Preterite",        "level": "B2"},
+          {"key": "trapassato_remoto",   "label_native": "Trapassato remoto",   "label_en": "Past anterior",    "level": "C1"}
+        ]
+      },
+      {
+        "key": "congiuntivo",
+        "label_native": "Congiuntivo",
+        "label_en": "Subjunctive",
+        "tenses": [
+          {"key": "presente",   "label_native": "Presente",   "label_en": "Present",    "level": "B1"},
+          {"key": "passato",    "label_native": "Passato",    "label_en": "Past",       "level": "B2"},
+          {"key": "imperfetto", "label_native": "Imperfetto", "label_en": "Imperfect",  "level": "B2"},
+          {"key": "trapassato", "label_native": "Trapassato", "label_en": "Pluperfect", "level": "C1"}
+        ]
+      },
+      {
+        "key": "condizionale",
+        "label_native": "Condizionale",
+        "label_en": "Conditional",
+        "tenses": [
+          {"key": "presente", "label_native": "Presente", "label_en": "Present", "level": "A2"},
+          {"key": "passato",  "label_native": "Passato",  "label_en": "Past",    "level": "B1"}
+        ]
+      },
+      {
+        "key": "imperativo",
+        "label_native": "Imperativo",
+        "label_en": "Imperative",
+        "tenses": [
+          {"key": "presente", "label_native": "Presente", "label_en": "Present", "level": "A1"}
+        ]
+      }
+    ]
+  }
+}
