@@ -69,6 +69,12 @@ defmodule BeamlabLanguages do
   JLPT, HSK) for language-learning UIs. Order is pedagogical
   (A1→C2, N5→N1, HSK1→HSK6), not alphabetical.
 
+  To go the other way — from a language to its system — use
+  `level_system/1` (`"fr"` → `"cefr"`, `"zh"` → `"hsk"`, `"ja"` →
+  `"jlpt"`) and `language_levels/1` (the level keys for a language in
+  one call). CEFR is the default for any language without a more
+  specific system; Korean returns `nil` (TOPIK isn't modeled).
+
   ## Roadmap
 
   Planned for future versions and intentionally **not** in v1:
@@ -97,6 +103,16 @@ defmodule BeamlabLanguages do
   # Real-world input from POSIX locales, glibc, and browsers emits these:
   #   - "nb" (Bokmål) and "nn" (Nynorsk) collapse to "no" (Norwegian)
   @aliases %{"nb" => "no", "nn" => "no"}
+
+  # Maps a language base code to its proficiency level system. CEFR is the
+  # default for any known language without a more specific system, so only
+  # the exceptions are listed here:
+  #   - "zh" (Chinese, and its variants via normalize/1) => "hsk"
+  #   - "ja" (Japanese) => "jlpt"
+  #   - "ko" (Korean) => nil — TOPIK is the real-world system but is not
+  #     among the three we curate. Defaulting it to CEFR would be wrong, so
+  #     it's an explicit nil: a known gap, not an oversight.
+  @level_systems %{"zh" => "hsk", "ja" => "jlpt", "ko" => nil}
 
   @languages @raw
              |> Enum.map(fn {code, data} ->
@@ -631,4 +647,80 @@ defmodule BeamlabLanguages do
   """
   @spec level_info(String.t(), String.t()) :: map() | nil
   def level_info(system, level_key), do: Levels.level_info(system, level_key)
+
+  @doc """
+  Returns the proficiency level system for a language, or `nil`.
+
+  CEFR is the default for any known language without a more specific
+  system; Chinese (`"zh"`) maps to HSK and Japanese (`"ja"`) to JLPT.
+  Korean (`"ko"`) has no curated system — TOPIK isn't among the three we
+  model — so it returns `nil` rather than a wrong default. The result is a
+  system key suitable for `levels/1`, `level_system_label/1`, etc.
+
+  Accepts BCP 47 input and sloppy casing like every other code-taking
+  function — lookups are normalized via `normalize/1`. Returns `nil` for
+  unknown / `nil` / non-string input.
+
+  ## Examples
+
+      iex> BeamlabLanguages.level_system("fr")
+      "cefr"
+
+      iex> BeamlabLanguages.level_system("fr-FR")
+      "cefr"
+
+      iex> BeamlabLanguages.level_system("zh")
+      "hsk"
+
+      iex> BeamlabLanguages.level_system("ja")
+      "jlpt"
+
+      iex> BeamlabLanguages.level_system("ko")
+      nil
+
+      iex> BeamlabLanguages.level_system("xx")
+      nil
+
+  """
+  @spec level_system(any()) :: String.t() | nil
+  def level_system(code) do
+    case get(code) do
+      nil -> nil
+      %Language{code: base} -> Map.get(@level_systems, base, "cefr")
+    end
+  end
+
+  @doc """
+  Returns the proficiency level keys for a language, in pedagogical order.
+
+  Convenience for `levels(level_system(code))`: resolves the language's
+  level system and lists its keys. Returns `[]` when the language has no
+  curated system (e.g. Korean) and for unknown / `nil` codes — the same
+  empty result `levels/1` gives for an unknown system.
+
+  ## Examples
+
+      iex> BeamlabLanguages.language_levels("fr")
+      ["A1", "A2", "B1", "B2", "C1", "C2"]
+
+      iex> BeamlabLanguages.language_levels("zh")
+      ["HSK1", "HSK2", "HSK3", "HSK4", "HSK5", "HSK6"]
+
+      iex> BeamlabLanguages.language_levels("ja")
+      ["N5", "N4", "N3", "N2", "N1"]
+
+      iex> BeamlabLanguages.language_levels("ko")
+      []
+
+      iex> BeamlabLanguages.language_levels("xx")
+      []
+
+  """
+  @spec language_levels(any()) :: [String.t()]
+  def language_levels(code) do
+    case level_system(code) do
+      nil -> []
+      system -> levels(system)
+    end
+  end
 end

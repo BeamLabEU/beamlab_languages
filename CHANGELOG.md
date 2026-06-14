@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-06-06
+
+### Added
+
+- **Language → level-system mapping** — `BeamlabLanguages.level_system/1` returns the proficiency system for a language code (`"fr"` → `"cefr"`, `"zh"` → `"hsk"`, `"ja"` → `"jlpt"`). CEFR is the default for any known language without a more specific system; Korean (`"ko"`) returns `nil` because TOPIK isn't among the curated three (a known gap). Input is normalized like every other code-taking function, so `"fr-FR"`, `"ZH-Hans-CN"`, etc. work. Unknown / `nil` input returns `nil`.
+- **`language_levels/1`** — convenience for `levels(level_system(code))`: the level keys for a language in pedagogical order. Returns `[]` for languages with no curated system and for unknown codes.
+
 ## [0.4.0] - 2026-06-05
 
 ### Added
