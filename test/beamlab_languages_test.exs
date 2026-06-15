@@ -223,7 +223,12 @@ defmodule BeamlabLanguagesTest do
       persons = BeamlabLanguages.persons("fr")
       assert length(persons) == 6
       assert Enum.map(persons, & &1.key) == ["1sg", "2sg", "3sg", "1pl", "2pl", "3pl"]
-      assert hd(persons) == %{key: "1sg", label_native: "je", label_en: "I"}
+      assert hd(persons) == %{key: "1sg", label_native: "je", label_en: "I", number: :singular}
+    end
+
+    test "tags each person with grammatical number derived from the key" do
+      numbers = BeamlabLanguages.persons("fr") |> Enum.map(& &1.number)
+      assert numbers == [:singular, :singular, :singular, :plural, :plural, :plural]
     end
 
     test "every entry has both native and English labels" do
@@ -237,6 +242,81 @@ defmodule BeamlabLanguagesTest do
       assert BeamlabLanguages.persons("zh") == nil
       assert BeamlabLanguages.persons("xx") == nil
       assert BeamlabLanguages.persons(nil) == nil
+    end
+  end
+
+  describe "persons/2" do
+    test "filters by number, preserving teaching order" do
+      assert ["1sg", "2sg", "3sg"] =
+               BeamlabLanguages.persons("fr", number: :singular) |> Enum.map(& &1.key)
+
+      assert ["1pl", "2pl", "3pl"] =
+               BeamlabLanguages.persons("it", number: :plural) |> Enum.map(& &1.key)
+    end
+
+    test "with no :number option behaves like persons/1" do
+      assert BeamlabLanguages.persons("fr", []) == BeamlabLanguages.persons("fr")
+    end
+
+    test "returns [] when no person matches the requested number" do
+      assert BeamlabLanguages.persons("fr", number: :dual) == []
+    end
+
+    test "returns nil for uncurated / unknown, like persons/1" do
+      assert BeamlabLanguages.persons("zh", number: :singular) == nil
+      assert BeamlabLanguages.persons("xx", number: :plural) == nil
+      assert BeamlabLanguages.persons(nil, number: :singular) == nil
+    end
+  end
+
+  describe "reflexive?/2" do
+    test "detects French pronominal infinitives" do
+      assert BeamlabLanguages.reflexive?("fr", "se laver")
+      assert BeamlabLanguages.reflexive?("fr", "se souvenir")
+      assert BeamlabLanguages.reflexive?("fr", "s'appeler")
+      assert BeamlabLanguages.reflexive?("fr", "s'asseoir")
+    end
+
+    test "does not treat non-reflexive French verbs starting with 'se' as reflexive" do
+      refute BeamlabLanguages.reflexive?("fr", "semer")
+      refute BeamlabLanguages.reflexive?("fr", "sentir")
+      refute BeamlabLanguages.reflexive?("fr", "servir")
+      refute BeamlabLanguages.reflexive?("fr", "manger")
+    end
+
+    test "detects Italian -rsi infinitives the French rule would miss" do
+      assert BeamlabLanguages.reflexive?("it", "chiamarsi")
+      assert BeamlabLanguages.reflexive?("it", "alzarsi")
+      assert BeamlabLanguages.reflexive?("it", "mettersi")
+      assert BeamlabLanguages.reflexive?("it", "vestirsi")
+    end
+
+    test "does not treat non-reflexive Italian verbs as reflexive" do
+      refute BeamlabLanguages.reflexive?("it", "parlare")
+      refute BeamlabLanguages.reflexive?("it", "credere")
+      refute BeamlabLanguages.reflexive?("it", "se laver")
+    end
+
+    test "lowercases and trims the lemma" do
+      assert BeamlabLanguages.reflexive?("fr", "  Se Laver ")
+      assert BeamlabLanguages.reflexive?("it", "Chiamarsi")
+    end
+
+    test "normalizes the language code" do
+      assert BeamlabLanguages.reflexive?("FR", "se laver")
+      assert BeamlabLanguages.reflexive?("it-IT", "chiamarsi")
+    end
+
+    test "returns false for languages without a curated reflexive rule" do
+      refute BeamlabLanguages.reflexive?("en", "wash oneself")
+      refute BeamlabLanguages.reflexive?("de", "sich waschen")
+    end
+
+    test "returns false for unknown / nil codes and non-string lemmas" do
+      refute BeamlabLanguages.reflexive?("xx", "se laver")
+      refute BeamlabLanguages.reflexive?(nil, "se laver")
+      refute BeamlabLanguages.reflexive?("fr", nil)
+      refute BeamlabLanguages.reflexive?("fr", 42)
     end
   end
 

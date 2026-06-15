@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-06-15
+
+### Added
+
+- **`reflexive?/2`** — `BeamlabLanguages.reflexive?(code, lemma)` returns `true` iff a lemma is a reflexive / pronominal verb in the language. Encapsulates per-language morphology that consumers had been hardcoding: French's leading pronoun (`"se laver"`, `"s'appeler"` — but not `"semer"`/`"sentir"`) and **Italian's enclitic `-rsi` ending** (`"chiamarsi"`, `"mettersi"`), which a French-only `"se "`/`"s'"` rule misses entirely. The lemma is lowercased and trimmed internally; the code is normalized like every other code-taking function. Returns `false` for languages without a curated rule and for unknown / `nil` / non-string input.
+- **`persons/2`** — `BeamlabLanguages.persons(code, number: :singular | :plural | :dual)` returns only the persons in that grammatical number, in teaching order. With no `:number` option it equals `persons/1`. Returns `nil` for uncurated languages (like `persons/1`) and `[]` when no person matches the requested number.
+
+### Changed
+
+- **`persons/1` entries now carry a `:number` key** (`:singular`, `:plural`, or `:dual`; `nil` for an unrecognised key suffix), derived from the person key (`"1sg"` → `:singular`, `"3pl"` → `:plural`). Additive — existing `:key` / `:label_native` / `:label_en` keys are unchanged — but code that asserts exact map equality on a person entry must account for the new key. Lets consumers split singular/plural blocks by attribute instead of hardcoding which person keys belong to each number.
+
+### Notes
+
+- No new level API was needed for the language → CEFR-ladder use case: `levels/1` already maps a *system* key to its ladder (`levels("cefr")` → `["A1", …, "C2"]`) and `language_levels/1` (v0.5.0) maps a *language* code straight to it (`language_levels("fr")` → `["A1", …, "C2"]`). Calling `levels("fr")` returns `[]` because `"fr"` is a language, not a system key — use `language_levels/1` there.
+
 ## [0.6.0] - 2026-06-14
 
 ### Added

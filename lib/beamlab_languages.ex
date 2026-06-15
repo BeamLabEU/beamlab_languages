@@ -23,11 +23,14 @@ defmodule BeamlabLanguages do
 
   ## Verb conjugation
 
-  `has_verb_conjugation?/1`, `verb_groups/1`, `persons/1`,
-  `conjugation_paradigm/1`, and `tense_level/3` expose pedagogical
-  conjugation metadata for language-learning UIs: the modes/tenses a
-  learner is taught, the proficiency level each tense is taught at, the
-  group system (e.g. French -er/-ir/-re), and the pronoun list.
+  `has_verb_conjugation?/1`, `verb_groups/1`, `persons/1`, `persons/2`,
+  `conjugation_paradigm/1`, `tense_level/3`, and `reflexive?/2` expose
+  pedagogical conjugation metadata for language-learning UIs: the
+  modes/tenses a learner is taught, the proficiency level each tense is
+  taught at, the group system (e.g. French -er/-ir/-re), the pronoun list
+  (each tagged with grammatical `:number`), and whether a given lemma is a
+  reflexive / pronominal verb (`reflexive?("fr", "se laver")`,
+  `reflexive?("it", "chiamarsi")`).
 
   The contract is **"true iff we've curated a paradigm"**, not "true iff
   the language inflects verbs". So `has_verb_conjugation?("fr")` is `true`,
@@ -87,6 +90,7 @@ defmodule BeamlabLanguages do
   alias BeamlabLanguages.Conjugation
   alias BeamlabLanguages.Language
   alias BeamlabLanguages.Levels
+  alias BeamlabLanguages.Reflexive
 
   @type code :: String.t()
   @type gender :: String.t()
@@ -461,12 +465,17 @@ defmodule BeamlabLanguages do
   Returns the person/pronoun list for a language's conjugation, or `nil`.
 
   Each entry is a map with `:key` (a stable identifier like `"1sg"` or
-  `"3pl"`), `:label_native` (the pronoun in the target language), and
-  `:label_en` (the English gloss, useful for learner UIs).
+  `"3pl"`), `:label_native` (the pronoun in the target language),
+  `:label_en` (the English gloss, useful for learner UIs), and `:number`
+  (`:singular`, `:plural`, or `:dual` for a future dual-marking language;
+  `nil` if the key carries no recognisable number). Order is the teaching
+  order — singular persons first, then plural — so the list can drive a
+  conjugation grid without a separate person-ordering table.
 
   The set of person keys may vary by language — a future Slovenian entry
   would add a dual, Arabic would split 2nd person by gender, etc. Don't
-  assume a fixed six-person shape.
+  assume a fixed six-person shape; filter on `:number` (or use
+  `persons/2`) rather than slicing the list by position.
 
   Returns `nil` for languages without a curated paradigm.
 
@@ -476,7 +485,7 @@ defmodule BeamlabLanguages do
       iex> length(persons)
       6
       iex> hd(persons)
-      %{key: "1sg", label_native: "je", label_en: "I"}
+      %{key: "1sg", label_native: "je", label_en: "I", number: :singular}
 
       iex> BeamlabLanguages.persons("zh")
       nil
@@ -487,6 +496,91 @@ defmodule BeamlabLanguages do
     case normalize(code) do
       nil -> nil
       base -> Conjugation.persons(base)
+    end
+  end
+
+  @doc """
+  Like `persons/1`, but filters by grammatical number.
+
+  Pass `number: :singular`, `number: :plural`, or `number: :dual` to get only
+  the persons in that number, in teaching order. With no `:number` option this
+  is identical to `persons/1`. Lets a UI render singular and plural blocks
+  without hardcoding which person keys belong to each.
+
+  Returns `nil` for languages without a curated paradigm (same as `persons/1`),
+  and `[]` when the language has persons but none in the requested number.
+
+  ## Examples
+
+      iex> BeamlabLanguages.persons("fr", number: :singular) |> Enum.map(& &1.key)
+      ["1sg", "2sg", "3sg"]
+
+      iex> BeamlabLanguages.persons("fr", number: :plural) |> Enum.map(& &1.key)
+      ["1pl", "2pl", "3pl"]
+
+      iex> BeamlabLanguages.persons("fr", number: :dual)
+      []
+
+      iex> BeamlabLanguages.persons("zh", number: :singular)
+      nil
+
+  """
+  @spec persons(any(), keyword()) :: [map()] | nil
+  def persons(code, opts) when is_list(opts) do
+    with list when is_list(list) <- persons(code) do
+      case Keyword.get(opts, :number) do
+        nil -> list
+        number -> Enum.filter(list, &(&1.number == number))
+      end
+    end
+  end
+
+  @doc """
+  Returns true iff the lemma is a reflexive / pronominal verb in the language.
+
+  Recognises the language's reflexive marker on a dictionary-form lemma:
+  French's leading pronoun (`"se laver"`, `"s'appeler"`) and Italian's enclitic
+  `-rsi` ending (`"chiamarsi"`, `"mettersi"`). The lemma is lowercased and
+  trimmed internally, so values straight from user input or a database column
+  work as-is.
+
+  The contract is **"true iff we recognise a reflexive marker for a language we
+  have a rule for"**. Returns `false` for languages without a curated reflexive
+  rule, for non-reflexive lemmas, and for unknown / `nil` codes or non-string
+  lemmas — callers routinely pass whatever they have.
+
+  ## Examples
+
+      iex> BeamlabLanguages.reflexive?("fr", "se laver")
+      true
+
+      iex> BeamlabLanguages.reflexive?("fr", "s'appeler")
+      true
+
+      iex> BeamlabLanguages.reflexive?("fr", "manger")
+      false
+
+      iex> BeamlabLanguages.reflexive?("fr", "semer")
+      false
+
+      iex> BeamlabLanguages.reflexive?("it", "chiamarsi")
+      true
+
+      iex> BeamlabLanguages.reflexive?("it", "parlare")
+      false
+
+      iex> BeamlabLanguages.reflexive?("en", "wash oneself")
+      false
+
+      iex> BeamlabLanguages.reflexive?("xx", "se laver")
+      false
+
+  """
+  @spec reflexive?(any(), any()) :: boolean()
+  def reflexive?(code, lemma) do
+    case normalize(code) do
+      nil -> false
+      base -> Reflexive.reflexive?(base, lemma)
     end
   end
 

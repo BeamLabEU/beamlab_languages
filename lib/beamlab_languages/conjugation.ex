@@ -30,6 +30,22 @@ defmodule BeamlabLanguages.Conjugation do
     %{key: k, label_native: ln, label_en: le}
   end
 
+  # Grammatical number is encoded in the person key suffix ("1sg" → singular,
+  # "3pl" → plural, a future "2du" → dual), so it's derived rather than stored
+  # a second time in the data files. Unrecognised suffixes get `nil`.
+  number_for_key = fn key ->
+    cond do
+      String.ends_with?(key, "sg") -> :singular
+      String.ends_with?(key, "pl") -> :plural
+      String.ends_with?(key, "du") -> :dual
+      true -> nil
+    end
+  end
+
+  to_person = fn %{"key" => k, "label_native" => ln, "label_en" => le} ->
+    %{key: k, label_native: ln, label_en: le, number: number_for_key.(k)}
+  end
+
   # Tenses carry an extra `:level` (CEFR / JLPT / HSK key) describing where the
   # tense sits in a curriculum. Absent in the JSON ⇒ `nil` (level unknown).
   to_tense = fn %{"key" => k, "label_native" => ln, "label_en" => le} = tense ->
@@ -68,7 +84,7 @@ defmodule BeamlabLanguages.Conjugation do
           {code,
            %{
              verb_groups: to_groups.(raw["verb_groups"]),
-             persons: Enum.map(raw["persons"], to_label_item),
+             persons: Enum.map(raw["persons"], to_person),
              paradigm: to_paradigm.(raw["paradigm"])
            }}
         end)

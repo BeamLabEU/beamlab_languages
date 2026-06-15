@@ -58,8 +58,19 @@ BeamlabLanguages.get("fr")
 BeamlabLanguages.levels("cefr")
 # ["A1", "A2", "B1", "B2", "C1", "C2"]
 
+BeamlabLanguages.language_levels("fr")
+# ["A1", "A2", "B1", "B2", "C1", "C2"]  — the ladder straight from a language code
+
 BeamlabLanguages.level_info("cefr", "A1")
 # %{key: "A1", label: "A1", description: "Beginner"}
+
+BeamlabLanguages.persons("fr", number: :singular) |> Enum.map(& &1.key)
+# ["1sg", "2sg", "3sg"]  — each person also carries :number
+
+BeamlabLanguages.reflexive?("fr", "se laver")
+# true
+BeamlabLanguages.reflexive?("it", "chiamarsi")
+# true  — Italian -rsi, which a French "se "/"s'" rule would miss
 ```
 
 Every function that takes a language code runs `normalize/1` internally, so `"en-US"`, `"FR"`, and `" fr "` all work. Predicates (`has_gender?/1`, `known?/1`) return `false` for `nil` or unknown input rather than raising — handy in form-validation paths.
