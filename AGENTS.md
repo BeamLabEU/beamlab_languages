@@ -38,6 +38,11 @@ mix format
 mix precommit
 ```
 
+## Git Workflow
+
+- **Work directly on `main`.** Commit and push to `main` — do not create feature branches.
+- If a change is large or risky enough that branching seems warranted, **ask the maintainer first** rather than branching on your own initiative.
+
 ## Project Structure
 
 ```
